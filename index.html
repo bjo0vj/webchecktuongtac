@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng Nhập - Quản Lý Tương Tác</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="login-page">
+    <div class="login-container">
+        <div class="login-box">
+            <div class="login-header">
+                <div class="logo">📊</div>
+                <h1>Quản Lý Tương Tác</h1>
+                <p>Đăng nhập để quản lý nhóm của bạn</p>
+            </div>
+            
+            <form id="loginForm" class="login-form">
+                <div class="input-group">
+                    <label for="code">Mã Code</label>
+                    <input type="text" id="code" name="code" placeholder="Nhập mã 10 số" maxlength="10" required>
+                </div>
+                
+                <div class="input-group">
+                    <label for="password">Mật Khẩu</label>
+                    <input type="password" id="password" name="password" placeholder="Nhập mật khẩu 10 số" maxlength="10" required>
+                </div>
+                
+                <button type="submit" class="btn-login">
+                    <span>Đăng Nhập</span>
+                    <span class="loading" style="display:none;">⏳</span>
+                </button>
+            </form>
+            
+            <div class="login-footer">
+                <p>Sử dụng lệnh <code>/addaccount</code> trong bot để tạo tài khoản</p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const code = document.getElementById('code').value;
+            const password = document.getElementById('password').value;
+            
+            // Lưu vào localStorage
+            localStorage.setItem('userCode', code);
+            localStorage.setItem('userPass', password);
+            
+            // Chuyển sang dashboard
+            window.location.href = 'dashboard.html';
+        });
+    </script>
+</body>
+</html>

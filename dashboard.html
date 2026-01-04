@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Quản Lý Tương Tác</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="dashboard">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <span class="logo">📊</span>
+                <h1>Quản Lý Tương Tác</h1>
+            </div>
+            <div class="header-right">
+                <span class="user-code" id="userCode"></span>
+                <button class="btn-logout" onclick="logout()">Đăng Xuất</button>
+            </div>
+        </header>
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h3>📋 Nhóm Đã Bật</h3>
+                <button class="btn-refresh" onclick="loadData()" title="Tải lại dữ liệu">🔄</button>
+            </div>
+            <div class="group-list" id="groupList">
+                <div class="loading-box">
+                    <span>⏳ Đang tải...</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="content-header">
+                <h2 id="currentGroupName">Chọn một nhóm để xem</h2>
+                <div class="content-actions">
+                    <button class="btn-action" onclick="loadGroupData()" id="btnLoadData" style="display:none;">
+                        🔄 Load Database
+                    </button>
+                </div>
+            </div>
+
+            <div class="members-container" id="membersContainer">
+                <div class="empty-state">
+                    <span class="icon">👈</span>
+                    <p>Chọn một nhóm từ danh sách bên trái để xem thành viên</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
