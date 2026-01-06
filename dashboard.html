@@ -16,7 +16,7 @@
                 <h1>Quản Lý Tương Tác</h1>
             </div>
             <div class="header-right">
-                <span id="botStatus">⏳ Checking...</span>
+                <span id="botStatus">⏳</span>
                 <span class="user-code" id="userCode"></span>
                 <button class="btn-logout" onclick="logout()">Đăng Xuất</button>
             </div>
@@ -25,28 +25,28 @@
         <aside class="sidebar">
             <div class="sidebar-header">
                 <h3>📋 Nhóm</h3>
-                <button class="btn-refresh" onclick="loadData()" title="Refresh">🔄</button>
+                <button class="btn-refresh" onclick="loadData()">🔄</button>
             </div>
             <div class="group-list" id="groupList">
-                <div class="loading-box">⏳ Đang tải...</div>
+                <div class="loading-box">⏳</div>
             </div>
         </aside>
 
         <main class="main-content">
             <div class="content-header">
                 <h2 id="currentGroupName">Chọn nhóm</h2>
-                <button class="btn-action" onclick="loadGroupData()" id="btnLoadData" style="display:none;">🔄
-                    Sync</button>
+                <div class="action-buttons" id="actionButtons" style="display:none;">
+                    <button class="btn-action btn-sync" onclick="forceSync()">🔄 Sync</button>
+                    <button class="btn-action btn-clear" onclick="clearGroupTime()">🗑️ Clear Time</button>
+                </div>
             </div>
             <div class="members-container" id="membersContainer">
-                <div class="empty-state">
-                    <span class="icon">👈</span>
-                    <p>Chọn nhóm từ danh sách</p>
+                <div class="empty-state"><span class="icon">👈</span>
+                    <p>Chọn nhóm</p>
                 </div>
             </div>
         </main>
     </div>
-
     <div class="toast" id="toast"></div>
     <script src="script.js"></script>
 </body>

